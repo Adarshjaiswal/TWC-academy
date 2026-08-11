@@ -1,0 +1,649 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum Role {
+  USER
+  CONTENT_ADMIN
+  SUPPORT_ADMIN
+  SUPER_ADMIN
+}
+
+enum PackageStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}
+
+enum PublishStatus {
+  DRAFT
+  APPROVED
+  PUBLISHED
+  ARCHIVED
+}
+
+enum OrderStatus {
+  CREATED
+  PENDING
+  PAID
+  FAILED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  INITIATED
+  AUTHORIZED
+  CAPTURED
+  FAILED
+  REFUNDED
+}
+
+enum MembershipStatus {
+  PENDING
+  ACTIVE
+  EXPIRING
+  EXPIRED
+  CANCELLED
+  PAUSED
+}
+
+enum TelegramAccessStatus {
+  NOT_ELIGIBLE
+  ELIGIBLE
+  INVITE_CREATED
+  JOINED
+  REVOKED
+  FAILED
+}
+
+enum ProvisioningJobStatus {
+  PENDING
+  RUNNING
+  SUCCEEDED
+  FAILED
+  CANCELLED
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  CLOSED
+  SPAM
+}
+
+enum TicketStatus {
+  OPEN
+  PENDING_USER
+  RESOLVED
+  CLOSED
+}
+
+enum TicketCategory {
+  ACCOUNT
+  PAYMENT
+  TELEGRAM
+  MEMBERSHIP
+  GENERAL
+}
+
+enum NotificationType {
+  PAYMENT
+  MEMBERSHIP
+  TELEGRAM
+  SUPPORT
+  SYSTEM
+}
+
+model User {
+  id                String    @id @default(cuid())
+  name              String
+  email             String    @unique
+  emailVerified     DateTime?
+  image             String?
+  passwordHash      String?   @db.VarChar(255)
+  phone             String?
+  role              Role      @default(USER)
+  marketingConsent  Boolean   @default(false)
+  notificationEmail Boolean   @default(true)
+  notificationApp   Boolean   @default(true)
+  disabledAt        DateTime?
+  deletedAt         DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  accounts             Account[]
+  sessions             Session[]
+  roleAssignments      UserRole[]
+  orders               Order[]
+  memberships          Membership[]
+  telegramAccountLinks TelegramAccountLink[]
+  telegramAccesses     TelegramAccess[]
+  supportTickets       SupportTicket[]       @relation("TicketRequester")
+  assignedTickets      SupportTicket[]       @relation("TicketAssignee")
+  supportMessages      SupportMessage[]
+  notifications        Notification[]
+  consentRecords       ConsentRecord[]
+  auditLogs            AuditLog[]
+
+  @@index([role])
+  @@index([emailVerified])
+  @@index([disabledAt])
+}
+
+model UserRole {
+  id        String   @id @default(cuid())
+  userId    String
+  role      Role
+  grantedBy String?
+  reason    String?  @db.VarChar(500)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, role])
+  @@index([role])
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  revokedAt    DateTime?
+  userAgent    String?  @db.VarChar(500)
+  ipAddress    String?  @db.VarChar(128)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expires])
+  @@index([revokedAt])
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+  createdAt  DateTime @default(now())
+  usedAt     DateTime?
+
+  @@unique([identifier, token])
+  @@index([expires])
+}
+
+model Package {
+  id                   String        @id @default(cuid())
+  slug                 String        @unique
+  name                 String
+  summary              String        @db.VarChar(500)
+  description          String        @db.Text
+  durationDays         Int
+  priceMinor           Int
+  currency             String        @default("INR") @db.VarChar(3)
+  compareAtPriceMinor  Int?
+  gatewayProvider      String        @default("razorpay")
+  gatewayPriceRef      String?
+  grantsTelegramAccess Boolean       @default(true)
+  isFeatured           Boolean       @default(false)
+  sortOrder            Int           @default(0)
+  status               PackageStatus @default(DRAFT)
+  archivedAt           DateTime?
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+
+  features    PackageFeature[]
+  orders      Order[]
+  memberships Membership[]
+
+  @@index([status, sortOrder])
+  @@index([isFeatured])
+}
+
+model PackageFeature {
+  id        String   @id @default(cuid())
+  packageId String
+  label     String
+  included  Boolean  @default(true)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  package Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
+
+  @@index([packageId, sortOrder])
+}
+
+model Order {
+  id                 String      @id @default(cuid())
+  publicId           String      @unique @default(cuid())
+  userId             String
+  packageId          String
+  status             OrderStatus @default(CREATED)
+  amountMinor        Int
+  currency           String      @db.VarChar(3)
+  provider           String      @default("razorpay")
+  providerOrderId    String?     @unique
+  providerCheckoutId String?
+  providerPaymentId  String?
+  checkoutUrl        String?     @db.Text
+  metadata           Json?
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+  paidAt             DateTime?
+  failedAt           DateTime?
+  cancelledAt        DateTime?
+  refundedAt         DateTime?
+
+  user       User           @relation(fields: [userId], references: [id])
+  package    Package        @relation(fields: [packageId], references: [id])
+  payments   Payment[]
+  webhooks   WebhookEvent[]
+  membership Membership?
+
+  @@index([userId, status, createdAt])
+  @@index([packageId])
+  @@index([provider, status])
+  @@index([createdAt])
+}
+
+model Payment {
+  id                 String        @id @default(cuid())
+  orderId            String
+  provider           String
+  providerPaymentId  String?       @unique
+  providerOrderId    String?
+  status             PaymentStatus @default(INITIATED)
+  amountMinor        Int
+  currency           String        @db.VarChar(3)
+  method             String?
+  receiptUrl         String?       @db.Text
+  safeMetadata       Json?
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  authorizedAt       DateTime?
+  capturedAt         DateTime?
+  failedAt           DateTime?
+  refundedAt         DateTime?
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@index([provider, status])
+  @@index([createdAt])
+}
+
+model WebhookEvent {
+  id            String    @id @default(cuid())
+  provider      String
+  eventId       String
+  eventType     String
+  orderId       String?
+  payloadDigest String
+  status        String    @default("RECEIVED")
+  attempts      Int       @default(0)
+  errorMessage  String?   @db.VarChar(1000)
+  processedAt   DateTime?
+  createdAt     DateTime  @default(now())
+
+  order Order? @relation(fields: [orderId], references: [id])
+
+  @@unique([provider, eventId])
+  @@index([provider, eventType])
+  @@index([status, createdAt])
+}
+
+model Membership {
+  id        String           @id @default(cuid())
+  userId    String
+  packageId String
+  orderId   String?          @unique
+  status    MembershipStatus @default(PENDING)
+  startsAt  DateTime?
+  endsAt    DateTime?
+  autoRenew Boolean          @default(false)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  user             User               @relation(fields: [userId], references: [id])
+  package          Package            @relation(fields: [packageId], references: [id])
+  order            Order?             @relation(fields: [orderId], references: [id])
+  events           MembershipEvent[]
+  telegramAccesses TelegramAccess[]
+
+  @@index([userId, status])
+  @@index([status, endsAt])
+  @@index([packageId])
+}
+
+model MembershipEvent {
+  id           String   @id @default(cuid())
+  membershipId String
+  actorUserId  String?
+  action       String
+  reason       String?  @db.VarChar(1000)
+  beforeState  String?
+  afterState   String?
+  safeMetadata Json?
+  createdAt    DateTime @default(now())
+
+  membership Membership @relation(fields: [membershipId], references: [id], onDelete: Cascade)
+
+  @@index([membershipId, createdAt])
+  @@index([action])
+}
+
+model TelegramAccountLink {
+  id             String    @id @default(cuid())
+  userId         String
+  telegramUserId String    @unique
+  username       String?
+  firstName      String?
+  linkedAt       DateTime  @default(now())
+  revokedAt      DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([revokedAt])
+}
+
+model TelegramAccess {
+  id                 String               @id @default(cuid())
+  userId             String
+  membershipId       String?
+  status             TelegramAccessStatus @default(NOT_ELIGIBLE)
+  inviteLinkHash     String?
+  redactedInviteLink String?              @db.VarChar(500)
+  inviteExpiresAt    DateTime?
+  joinedAt           DateTime?
+  revokedAt          DateTime?
+  failureReason      String?              @db.VarChar(1000)
+  retryCount         Int                  @default(0)
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  membership Membership? @relation(fields: [membershipId], references: [id])
+  jobs       TelegramProvisioningJob[]
+
+  @@index([userId, status])
+  @@index([membershipId])
+  @@index([status, inviteExpiresAt])
+}
+
+model TelegramProvisioningJob {
+  id          String                @id @default(cuid())
+  accessId    String
+  type        String
+  status      ProvisioningJobStatus @default(PENDING)
+  attempts    Int                   @default(0)
+  runAfter    DateTime              @default(now())
+  lockedAt    DateTime?
+  lastError   String?               @db.VarChar(1000)
+  completedAt DateTime?
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @updatedAt
+
+  access TelegramAccess @relation(fields: [accessId], references: [id], onDelete: Cascade)
+
+  @@index([status, runAfter])
+  @@index([accessId])
+}
+
+model Service {
+  id          String        @id @default(cuid())
+  slug        String        @unique
+  title       String
+  summary     String        @db.VarChar(500)
+  body        String        @db.Text
+  icon        String?
+  status      PublishStatus @default(DRAFT)
+  sortOrder   Int           @default(0)
+  seoTitle    String?
+  seoDesc     String?       @db.VarChar(500)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([status, sortOrder])
+}
+
+model ContentBlock {
+  id        String        @id @default(cuid())
+  key       String        @unique
+  area      String
+  title     String
+  body      String        @db.Text
+  ctaLabel  String?
+  ctaHref   String?
+  metadata  Json?
+  status    PublishStatus @default(DRAFT)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@index([area, status])
+}
+
+model Testimonial {
+  id          String        @id @default(cuid())
+  authorName  String
+  roleLabel   String?
+  quote       String        @db.Text
+  disclosure  String        @db.VarChar(500)
+  status      PublishStatus @default(DRAFT)
+  sortOrder   Int           @default(0)
+  approvedAt  DateTime?
+  publishedAt DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@unique([authorName])
+  @@index([status, sortOrder])
+}
+
+model PerformanceResult {
+  id                String        @id @default(cuid())
+  title             String
+  resultDate        DateTime
+  caption           String        @db.VarChar(1000)
+  sourceLabel       String
+  verificationLabel String
+  disclosure        String        @db.VarChar(500)
+  mediaAssetId      String?
+  status            PublishStatus @default(DRAFT)
+  sortOrder         Int           @default(0)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  mediaAsset MediaAsset? @relation(fields: [mediaAssetId], references: [id])
+
+  @@unique([title])
+  @@index([status, sortOrder])
+  @@index([resultDate])
+}
+
+model FaqCategory {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  name      String
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  items FaqItem[]
+
+  @@index([sortOrder])
+}
+
+model FaqItem {
+  id         String        @id @default(cuid())
+  categoryId String
+  question   String
+  answer     String        @db.Text
+  status     PublishStatus @default(DRAFT)
+  sortOrder  Int           @default(0)
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  category FaqCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([categoryId, question])
+  @@index([categoryId, status, sortOrder])
+}
+
+model ContactLead {
+  id              String     @id @default(cuid())
+  name            String
+  email           String
+  phone           String?
+  subject         String
+  message         String     @db.Text
+  consentAccepted Boolean
+  status          LeadStatus @default(NEW)
+  ipHash          String?
+  userAgent       String?    @db.VarChar(500)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  @@index([status, createdAt])
+  @@index([email])
+}
+
+model SupportTicket {
+  id          String         @id @default(cuid())
+  publicId    String         @unique @default(cuid())
+  requesterId String
+  assigneeId  String?
+  subject     String
+  category    TicketCategory
+  status      TicketStatus   @default(OPEN)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  resolvedAt  DateTime?
+
+  requester User             @relation("TicketRequester", fields: [requesterId], references: [id])
+  assignee  User?            @relation("TicketAssignee", fields: [assigneeId], references: [id])
+  messages  SupportMessage[]
+
+  @@index([requesterId, status])
+  @@index([assigneeId, status])
+  @@index([category, status])
+}
+
+model SupportMessage {
+  id        String   @id @default(cuid())
+  ticketId  String
+  authorId  String
+  body      String   @db.Text
+  internal  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  ticket SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  author User          @relation(fields: [authorId], references: [id])
+
+  @@index([ticketId, createdAt])
+  @@index([authorId])
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType
+  title     String
+  body      String           @db.VarChar(1000)
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, readAt, createdAt])
+}
+
+model MediaAsset {
+  id          String   @id @default(cuid())
+  url         String   @db.Text
+  altText     String
+  mimeType    String
+  width       Int?
+  height      Int?
+  sizeBytes   Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  performanceResults PerformanceResult[]
+}
+
+model SiteSetting {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  label       String
+  value       String   @db.Text
+  public      Boolean  @default(false)
+  description String?  @db.VarChar(500)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  actorUserId String?
+  action      String
+  entityType  String
+  entityId    String?
+  reason      String?  @db.VarChar(1000)
+  beforeDiff  Json?
+  afterDiff   Json?
+  ipAddress   String?  @db.VarChar(128)
+  userAgent   String?  @db.VarChar(500)
+  createdAt   DateTime @default(now())
+
+  actor User? @relation(fields: [actorUserId], references: [id])
+
+  @@index([actorUserId, createdAt])
+  @@index([entityType, entityId])
+  @@index([action])
+}
+
+model ConsentRecord {
+  id          String   @id @default(cuid())
+  userId      String?
+  email       String?
+  category    String
+  granted     Boolean
+  source      String
+  ipHash      String?
+  userAgent   String?  @db.VarChar(500)
+  recordedAt  DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId, recordedAt])
+  @@index([email])
+  @@index([category, granted])
+}
