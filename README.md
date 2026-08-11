@@ -1,6 +1,6 @@
-# TWC Trading Membership Platform
+# TWC Academy
 
-TWC is a single Next.js App Router monolith for a trading education, analysis, signals, community, and membership platform. It includes public marketing pages, email/password auth, database-backed sessions, member dashboard, admin workspace, package management data model, Razorpay-ready checkout/webhook flow, Telegram access state, MySQL/Prisma persistence, seed data, tests, and operations docs.
+TWC Academy is a single Next.js App Router monolith for a trading education, analysis, community, and membership platform. It includes public marketing pages, email/password auth, database-backed sessions, member dashboard, admin workspace, package management data model, Razorpay-ready checkout/webhook flow, Telegram access state, MySQL/Prisma persistence, seed data, tests, and operations docs.
 
 ## Version Set
 
@@ -14,15 +14,6 @@ TWC is a single Next.js App Router monolith for a trading education, analysis, s
 - Playwright `1.62.1`
 
 This stack uses Prisma 7 `prisma.config.ts` and `@prisma/adapter-mariadb` for MySQL.
-
-## Reference Direction
-
-Source references inspected:
-- Traders Paradise Live: premium trading-community positioning and strong CTAs, but the live site did not expose crawlable text in the inspection tool.
-- Easy Forex Pips: services navigation, VIP plans, Telegram CTA, reviews/FAQ/cookie-preference patterns, and payment-link flow.
-- Supplied SOW PDF: original marketing/payment/Telegram-redirection scope; this implementation expands it into auth, dashboard, admin, CMS, membership, and automation-ready workflows.
-
-The implementation avoids copying source code, exact composition, logos, proprietary assets, or automated trade-copying claims.
 
 ## Route Map
 
@@ -63,23 +54,20 @@ npm run db:seed
 npm run dev
 ```
 
-Docker is not installed in the current environment, so local DB startup was not verified here.
+## Deployment
 
-## Validation
+The app is designed to run on a Node.js 22+ VPS with MySQL/MariaDB, Nginx, PM2, and a production `.env`.
 
-Commands used in this environment:
+Typical production commands:
 
 ```bash
-npm audit --audit-level=low
-env DATABASE_URL=mysql://twc:twc_dev_password@127.0.0.1:3306/twc ./node_modules/.bin/prisma validate
-env DATABASE_URL=mysql://twc:twc_dev_password@127.0.0.1:3306/twc ./node_modules/.bin/prisma generate
-npm run typecheck
-npm run test
-npm run lint
+npm ci
+npm run db:deploy
 npm run build
+PORT=3000 pm2 start npm --name twc -- run start
 ```
 
-End-to-end Playwright smoke specs are present in `tests/e2e`, but browser execution requires running the dev server and installed Playwright browsers.
+Use Nginx as a reverse proxy to `http://127.0.0.1:3000`, then issue SSL with Certbot.
 
 ## Security Notes
 
@@ -97,4 +85,3 @@ End-to-end Playwright smoke specs are present in `tests/e2e`, but browser execut
 - Razorpay checkout falls back to a mock checkout URL when sandbox credentials are absent.
 - Telegram managed mode has schema, jobs, status tracking, and webhook validation, but real invite creation/revocation requires bot credentials and private-channel admin setup.
 - Legal copy, testimonials, results, team claims, and performance data are placeholders pending client/legal approval.
-- Docker, real MySQL migration execution, real payment webhooks, Telegram bot actions, and browser visual QA could not be fully verified in this environment.
