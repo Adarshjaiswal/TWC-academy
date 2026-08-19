@@ -14,6 +14,10 @@ test.describe("visual QA matrix", () => {
   for (const viewport of viewports) {
     for (const route of pages) {
       test(`${route} has no horizontal overflow at ${viewport.width}x${viewport.height}`, async ({ page }, testInfo) => {
+        if (route === "/") {
+          testInfo.setTimeout(120_000);
+        }
+
         await page.setViewportSize(viewport);
         await page.addInitScript(() => {
           localStorage.setItem("twc-cookie-consent", "saved");

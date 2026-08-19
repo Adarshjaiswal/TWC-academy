@@ -8,11 +8,11 @@ Set:
 
 ```bash
 TELEGRAM_MODE=redirect
-TELEGRAM_FREE_CHANNEL_URL=https://t.me/your_public_channel
-TELEGRAM_PREMIUM_CHANNEL_LABEL="TWC Premium Telegram"
+TELEGRAM_FREE_CHANNEL_URL=https://t.me/TWClive
+TELEGRAM_PREMIUM_CHANNEL_LABEL="TWC Premium Telegram Signals"
 ```
 
-Visitors see the free link. Active members see premium instructions in the dashboard after eligibility is confirmed.
+Visitors see the public TWC Live link. Active members see premium signal-channel instructions in the dashboard after eligibility is confirmed. This does not place trades, copy trades, or guarantee outcomes.
 
 ## Managed Mode
 

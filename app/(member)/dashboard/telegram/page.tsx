@@ -19,12 +19,12 @@ export default async function TelegramPage() {
       <h1 className="text-4xl font-black">Telegram access</h1>
       <div className="grid gap-5 lg:grid-cols-2">
         <Card>
-          <h2 className="text-2xl font-black">Free channel</h2>
-          <p className="mt-3 text-sm leading-6 text-[var(--muted)]">The public channel is available to visitors and members.</p>
-          <ButtonLink className="mt-5" href={env.TELEGRAM_FREE_CHANNEL_URL} variant="secondary">Open Free Telegram</ButtonLink>
+          <h2 className="text-2xl font-black">TWC Live channel</h2>
+          <p className="mt-3 text-sm leading-6 text-[var(--muted)]">The public Telegram channel is available to visitors and members.</p>
+          <ButtonLink className="mt-5" href={env.TELEGRAM_FREE_CHANNEL_URL} variant="secondary">Open TWC Live Telegram</ButtonLink>
         </Card>
         <Card>
-          <h2 className="text-2xl font-black">Premium access</h2>
+          <h2 className="text-2xl font-black">Premium signal access</h2>
           <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
             Status: {telegramAccess?.status ?? (eligible ? "ELIGIBLE" : "NOT_ELIGIBLE")}
           </p>
@@ -32,7 +32,7 @@ export default async function TelegramPage() {
             <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
               {env.TELEGRAM_MODE === "managed"
                 ? "Managed invite generation is available when bot credentials are configured."
-                : `Follow admin-provided instructions for ${env.TELEGRAM_PREMIUM_CHANNEL_LABEL}.`}
+                : `Follow admin-provided instructions for ${env.TELEGRAM_PREMIUM_CHANNEL_LABEL}. Signals are educational and do not place or copy trades.`}
             </p>
           ) : (
             <p className="mt-3 text-sm leading-6 text-[var(--muted)]">Activate or renew membership to unlock premium instructions.</p>

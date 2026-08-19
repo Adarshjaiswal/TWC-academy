@@ -156,6 +156,116 @@ export const marketCoverageFixtures = [
   "Crude Oil"
 ] as const;
 
+export const socialLinkFixtures = [
+  {
+    label: "YouTube",
+    iconLabel: "YT",
+    handle: "@tradewavecapital",
+    href: "https://youtube.com/@tradewavecapital?si=JfPC6sMA85cZ1uWP",
+    status: "live"
+  },
+  {
+    label: "X / Twitter",
+    iconLabel: "X",
+    handle: "@a_rdanish",
+    href: "https://x.com/a_rdanish?s=11&t=ahbjnZudUl7TLkKnZo3dNA",
+    status: "live"
+  },
+  {
+    label: "Instagram",
+    iconLabel: "IG",
+    handle: "@tradewavecapital",
+    href: "https://www.instagram.com/tradewavecapital?igsh=ODh5OTQzbjZxOWgx&utm_source=qr",
+    status: "live"
+  },
+  {
+    label: "Telegram",
+    iconLabel: "TG",
+    handle: "TWC live channel",
+    href: "https://t.me/TWClive",
+    status: "live"
+  },
+  {
+    label: "Threads",
+    iconLabel: "TH",
+    handle: "Coming soon",
+    href: null,
+    status: "comingSoon"
+  },
+  {
+    label: "Facebook / Meta",
+    iconLabel: "f",
+    handle: "Coming soon",
+    href: null,
+    status: "comingSoon"
+  },
+  {
+    label: "TikTok",
+    iconLabel: "TT",
+    handle: "Coming soon",
+    href: null,
+    status: "comingSoon"
+  }
+] as const;
+
+export const brokerFixtures = [
+  {
+    slug: "gtcfx",
+    name: "GTC FX",
+    logoSrc: "/brokers/gtcfx-logo.webp",
+    logoAlt: "GTCFX logo",
+    logoText: "GTC FX",
+    signupUrl: "https://web.mygtc.app/login/register?ref=XuDjHQMd",
+    description:
+      "GTCFX delivers an institutional-grade trading experience through deep liquidity, fast execution, competitive trading conditions, and a strong focus on regulatory compliance.",
+    details: ["Deep liquidity", "Fast execution", "Instant withdrawal solutions", "Global financial markets"]
+  },
+  {
+    slug: "puprime",
+    name: "PU Prime",
+    logoSrc: null,
+    logoAlt: "PU Prime logo",
+    logoText: "PU PRIME",
+    signupUrl: "https://www.puprime.partners/forex-trading-account/?affid=MjMyMTI4NzQ=",
+    description:
+      "PU Prime supports a trading lifestyle with tools, analytics, community features, and live or demo account opening in minutes.",
+    details: ["Tools and analytics", "Live and demo accounts", "Community features", "Multiple platform options"]
+  },
+  {
+    slug: "vantage",
+    name: "Vantage",
+    logoSrc: "/brokers/vantage-logo.svg",
+    logoAlt: "Vantage Markets logo",
+    logoText: "Vantage",
+    signupUrl: "https://www.vantagemarkets.com/open-live-account/?affid=NzM2MjA2MQ==&invitecode=hcPaz7z3",
+    description:
+      "A leading multi-asset broker offering competitive trading conditions, fast execution, advanced platforms, and professional-grade trading tools.",
+    details: ["Multi-asset access", "Fast execution", "Advanced platforms", "Professional-grade tools"]
+  },
+  {
+    slug: "exness",
+    name: "Exness",
+    logoSrc: "/brokers/exness-logo.svg",
+    logoAlt: "Exness logo",
+    logoText: "Exness",
+    signupUrl: "https://one.exnessonelink.com/a/t1p8p764e7",
+    description:
+      "Exness is known for fast automated order execution, instant withdrawals, and flexible leverage options across CFDs on forex, crypto, stocks, indices, and commodities.",
+    details: ["Fast order execution", "Instant withdrawals", "Flexible leverage", "CFD market access"]
+  }
+] as const;
+
+export const profitLossFixtures = [
+  { period: "Jan", rMultiple: 1.4 },
+  { period: "Feb", rMultiple: -0.6 },
+  { period: "Mar", rMultiple: 2.1 },
+  { period: "Apr", rMultiple: 0.8 },
+  { period: "May", rMultiple: -1.1 },
+  { period: "Jun", rMultiple: 2.6 },
+  { period: "Jul", rMultiple: 1.2 },
+  { period: "Aug", rMultiple: 3.0 }
+] as const;
+
 export const faqFixtures = [
   {
     category: "Program Access",

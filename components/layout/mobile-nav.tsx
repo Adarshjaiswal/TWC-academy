@@ -3,6 +3,7 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
+import { BrandLogo } from "@/components/layout/brand-logo";
 import { ButtonLink } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 
@@ -11,6 +12,7 @@ const links = [
   ["About", "/about"],
   ["Curriculum", "/services"],
   ["Programs", "/packages"],
+  ["Brokers", "/brokers"],
   ["Results", "/results"],
   ["FAQ", "/faq"],
   ["Contact", "/contact"]
@@ -27,7 +29,10 @@ export function MobileNav() {
         <Dialog.Overlay className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm" />
         <Dialog.Content className="fixed inset-y-3 right-3 z-50 flex w-[min(88vw,390px)] flex-col border border-[var(--border)] bg-[var(--background)] p-5 shadow-2xl sm:inset-y-4 sm:right-4">
           <div className="mb-8 flex items-center justify-between">
-            <Dialog.Title className="text-lg font-black">TWC Academy</Dialog.Title>
+            <Dialog.Title>
+              <BrandLogo className="h-12 w-40" />
+              <span className="sr-only">Trade Wave Capital navigation</span>
+            </Dialog.Title>
             <div className="flex items-center gap-2">
               <ThemeToggle />
               <Dialog.Close className="button-futuristic focus-ring inline-flex min-h-11 min-w-11 items-center justify-center border border-[var(--border)] bg-[rgba(255,209,102,0.08)]">

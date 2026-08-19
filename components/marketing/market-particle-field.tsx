@@ -192,7 +192,7 @@ export function MarketParticleField() {
   return (
     <canvas
       aria-hidden="true"
-      className="pointer-events-none absolute inset-0 -z-10 h-full w-full opacity-80"
+      className="pointer-events-none fixed inset-0 -z-10 h-screen w-screen opacity-80"
       ref={canvasRef}
     />
   );

@@ -7,14 +7,14 @@ import { SiteHeader } from "@/components/layout/site-header";
 export const metadata: Metadata = {
   metadataBase: new URL("http://127.0.0.1:3000"),
   title: {
-    default: "TWC Academy | Professional Trading Education",
-    template: "%s | TWC Academy"
+    default: "Trade Wave Capital | TWC Academy",
+    template: "%s | Trade Wave Capital"
   },
   description:
-    "TWC Academy teaches Gold, Forex, Crypto, and Indices with structured curriculum, live mentorship, risk management, and disciplined market application.",
+    "Trade Wave Capital teaches Gold, Forex, Crypto, and Indices through TWC Academy curriculum, live mentorship, risk management, and disciplined market application.",
   openGraph: {
-    title: "TWC Academy | Professional Trading Education",
-    description: "Trade with confidence through structured learning, live sessions, mentorship, and risk-first trading education.",
+    title: "Trade Wave Capital | TWC Academy",
+    description: "Unleash your potential with structured learning, live sessions, mentorship, and risk-first trading education.",
     type: "website"
   }
 };

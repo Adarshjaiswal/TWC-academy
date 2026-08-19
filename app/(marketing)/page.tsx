@@ -3,7 +3,9 @@ import {
   Award,
   BookOpen,
   Brain,
+  ChartSpline,
   CheckCircle2,
+  CreditCard,
   Gem,
   GraduationCap,
   MapPin,
@@ -15,9 +17,11 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { ButtonLink } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { BrokerListSection } from "@/components/marketing/broker-list";
 import { FaqList } from "@/components/marketing/faq-list";
 import { HeroVisual } from "@/components/marketing/hero-visual";
 import { MarketParticleField } from "@/components/marketing/market-particle-field";
+import { ProfitLossChart } from "@/components/marketing/profit-loss-chart";
 import { ScrollReveal } from "@/components/motion/scroll-reveal";
 import { env } from "@/lib/env";
 import {
@@ -49,15 +53,15 @@ export default function HomePage() {
       <section className="section relative min-h-[calc(100vh-4rem)] pb-12 pt-12 md:pt-16">
         <div className="container-shell grid items-center gap-10 lg:grid-cols-[1fr_0.95fr]">
           <ScrollReveal className="max-w-3xl">
-            <Badge tone="premium">Premium Course Brochure</Badge>
+            <Badge tone="premium">Trade Wave Capital Academy</Badge>
             <h1 className="mt-5 text-balance text-5xl font-black leading-[0.9] tracking-normal md:text-7xl">
-              TWC Academy
+              Trade Wave Capital
             </h1>
             <p className="mt-4 text-balance text-4xl font-black leading-[0.96] md:text-6xl">
-              Discover the World of <span className="gold-glow-text">Trading</span>
+              TWC Academy for <span className="gold-glow-text">disciplined trading</span>
             </p>
             <p className="mt-5 text-balance text-2xl font-black leading-tight text-[var(--premium)] md:text-4xl">
-              Trade with Confidence. Build Wealth with Discipline.
+              Unleash your potential with every trade.
             </p>
             <p className="mt-5 max-w-2xl text-xl leading-8 text-[var(--muted)]">
               Master financial markets with professional trading education, live mentorship, structured risk management, and practical market application.
@@ -79,7 +83,7 @@ export default function HomePage() {
               </ButtonLink>
               <ButtonLink href={env.TELEGRAM_FREE_CHANNEL_URL} variant="ghost">
                 <MessageCircle aria-hidden className="h-4 w-4" />
-                Telegram
+                Telegram Live
               </ButtonLink>
             </div>
             <div className="mt-8 grid gap-3 sm:grid-cols-4">
@@ -212,6 +216,8 @@ export default function HomePage() {
         </ScrollReveal>
       </section>
 
+      <BrokerListSection />
+
       <section className="section">
         <ScrollReveal className="container-shell">
           <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-end">
@@ -219,7 +225,7 @@ export default function HomePage() {
               <Badge tone="premium">Course Comparison</Badge>
               <h2 className="mt-4 text-3xl font-black md:text-5xl">Choose your academy track.</h2>
               <p className="mt-4 max-w-2xl text-[var(--muted)]">
-                Pricing follows the supplied brochure and can be edited from the admin-backed package data.
+                Pricing follows the supplied brochure and checkout is created through server-authoritative payment records.
               </p>
             </div>
             <ButtonLink href="/packages" variant="secondary">Compare all</ButtonLink>
@@ -248,6 +254,29 @@ export default function HomePage() {
               </Card>
             ))}
           </div>
+        </ScrollReveal>
+      </section>
+
+      <section className="section section-band">
+        <ScrollReveal className="container-shell grid gap-8 lg:grid-cols-[0.82fr_1.18fr]">
+          <div>
+            <Badge tone="info">Profit / Loss Chart</Badge>
+            <h2 className="mt-4 text-3xl font-black md:text-5xl">On-site P/L tracking layout for approved records.</h2>
+            <p className="mt-4 text-sm leading-6 text-[var(--muted)]">
+              The website now includes a built-in chart area for profit and loss summaries. The current values are demo R-multiple data until client-approved records are supplied.
+            </p>
+            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+              <div className="line-tile p-4">
+                <ChartSpline aria-hidden className="h-5 w-5 text-[var(--premium)]" />
+                <p className="mt-2 text-sm font-black">Chart view on website</p>
+              </div>
+              <div className="line-tile p-4">
+                <CreditCard aria-hidden className="h-5 w-5 text-[var(--primary)]" />
+                <p className="mt-2 text-sm font-black">Payment access remains verified server-side</p>
+              </div>
+            </div>
+          </div>
+          <ProfitLossChart />
         </ScrollReveal>
       </section>
 
@@ -289,13 +318,13 @@ export default function HomePage() {
       <section className="section">
         <ScrollReveal className="container-shell grid gap-8 lg:grid-cols-2">
           <Card>
-            <Badge tone="info">Telegram</Badge>
-            <h2 className="mt-4 text-3xl font-black">Community access with clear eligibility.</h2>
+            <Badge tone="info">Telegram Signals</Badge>
+            <h2 className="mt-4 text-3xl font-black">Free Telegram plus premium member access.</h2>
             <p className="mt-4 text-sm leading-6 text-[var(--muted)]">
-              Public visitors can join the free Telegram channel for updates. Premium instructions appear only after active program eligibility is confirmed server-side.
+              Public visitors can join TWC Live for updates. Premium signal-channel instructions appear only after active program eligibility is confirmed server-side.
             </p>
             <ButtonLink className="mt-6" href={env.TELEGRAM_FREE_CHANNEL_URL} variant="secondary">
-              Join Free Telegram
+              Open TWC Live Telegram
             </ButtonLink>
           </Card>
           <Card>

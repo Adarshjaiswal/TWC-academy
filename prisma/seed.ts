@@ -260,11 +260,11 @@ async function main() {
 
   await prisma.siteSetting.upsert({
     where: { key: "telegram.freeChannelUrl" },
-    update: { value: "https://t.me/twc_free_demo", public: true },
+    update: { value: "https://t.me/TWClive", public: true },
     create: {
       key: "telegram.freeChannelUrl",
       label: "Free Telegram URL",
-      value: "https://t.me/twc_free_demo",
+      value: "https://t.me/TWClive",
       public: true,
       description: "Public free-channel link. Private channel IDs stay in environment variables."
     }

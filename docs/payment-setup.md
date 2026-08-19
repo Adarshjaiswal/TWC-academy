@@ -20,11 +20,12 @@ Without Razorpay credentials, checkout returns a mock URL for local development.
 1. Authenticated member requests checkout with `packageId`.
 2. `/api/checkout` loads the package from MySQL and creates an order with database price, currency, and duration.
 3. Provider checkout is created server-side.
-4. Browser receives only the provider checkout URL/public key.
-5. Razorpay posts to `/api/webhooks/razorpay`.
-6. The route verifies the raw-body signature, upserts the webhook event by provider event ID, records payment, marks order paid, activates membership, creates Telegram access eligibility, notification, and audit-relevant records inside one transaction.
+4. Browser receives only the provider checkout URL/public key and opens `/checkout/razorpay`.
+5. `/checkout/razorpay` loads Razorpay Checkout.js with the server-created provider order ID.
+6. Razorpay posts to `/api/webhooks/razorpay`.
+7. The route verifies the raw-body signature, upserts the webhook event by provider event ID, records payment, marks order paid, activates membership, creates Telegram access eligibility, notification, and audit-relevant records inside one transaction.
 
-Never mark an order paid from a client success screen.
+Never mark an order paid from a client success screen. The Checkout.js success handler may send the member back to order history, but access stays pending until a verified provider event is processed.
 
 ## Webhook
 

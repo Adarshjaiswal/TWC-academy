@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import { ProfitLossChart } from "@/components/marketing/profit-loss-chart";
 import { resultFixtures, testimonialFixtures } from "@/lib/data/fixtures";
 
 export const metadata: Metadata = {
@@ -16,6 +17,9 @@ export default function ResultsPage() {
         <p className="mt-4 max-w-3xl text-[var(--muted)]">
           Production must publish only client-approved screenshots, records, dates, captions, source labels, verification labels, and disclaimers.
         </p>
+        <div className="mt-10">
+          <ProfitLossChart />
+        </div>
         <div className="mt-10 grid gap-5 md:grid-cols-2">
           {resultFixtures.map((result) => (
             <Card key={result.title}>

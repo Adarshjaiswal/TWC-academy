@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { Mail, MessageCircle, Phone, Send } from "lucide-react";
+import { BrandLogo } from "@/components/layout/brand-logo";
+import { SocialIconLinks } from "@/components/marketing/social-links";
 import { env } from "@/lib/env";
 
 const legal = [
@@ -16,9 +18,9 @@ export function SiteFooter() {
     <footer className="border-t border-[var(--border)] bg-[var(--background)]">
       <div className="container-shell grid gap-10 py-12 md:grid-cols-[1.2fr_0.8fr_0.8fr_1fr]">
         <div className="space-y-4">
-          <p className="text-xl font-black">TWC Academy</p>
+          <BrandLogo className="h-16 w-48" />
           <p className="max-w-sm text-sm leading-6 text-[var(--muted)]">
-            Professional trading education for Gold, Forex, Crypto, Indices, and risk-first market application.
+            Trade Wave Capital provides TWC Academy education for Gold, Forex, Crypto, Indices, and risk-first market application.
           </p>
           <p className="risk-copy">
             Trading involves substantial risk. TWC is not a broker, exchange, investment adviser, live trading terminal, or automated trade-execution service.
@@ -29,6 +31,7 @@ export function SiteFooter() {
           <div className="grid gap-2 text-sm text-[var(--muted)]">
             <Link href="/services">Curriculum</Link>
             <Link href="/packages">Programs</Link>
+            <Link href="/brokers">Broker Signup</Link>
             <Link href="/results">Results</Link>
             <Link href="/faq">FAQ</Link>
           </div>
@@ -66,7 +69,10 @@ export function SiteFooter() {
         </div>
       </div>
       <div className="border-t border-[var(--border)] py-4">
-        <p className="container-shell text-xs text-[var(--muted)]">© 2026 TWC Academy. Demo content requires client approval before production use.</p>
+        <div className="container-shell flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-xs text-[var(--muted)]">© 2026 Trade Wave Capital. Demo content requires client approval before production use.</p>
+          <SocialIconLinks className="sm:justify-end" />
+        </div>
       </div>
     </footer>
   );

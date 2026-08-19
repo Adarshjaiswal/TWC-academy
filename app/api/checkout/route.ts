@@ -15,18 +15,23 @@ export async function POST(request: Request) {
   const packageRecord = await prisma.package.findUnique({ where: { id: parsed.data.packageId } });
   if (!packageRecord) return NextResponse.json({ error: "Package not found." }, { status: 404 });
 
-  const pricedOrder = createServerPricedOrder({
-    userId: user.id,
-    packageRecord: {
-      id: packageRecord.id,
-      slug: packageRecord.slug,
-      name: packageRecord.name,
-      priceMinor: packageRecord.priceMinor,
-      currency: packageRecord.currency,
-      durationDays: packageRecord.durationDays,
-      status: packageRecord.status
-    }
-  });
+  let pricedOrder: ReturnType<typeof createServerPricedOrder>;
+  try {
+    pricedOrder = createServerPricedOrder({
+      userId: user.id,
+      packageRecord: {
+        id: packageRecord.id,
+        slug: packageRecord.slug,
+        name: packageRecord.name,
+        priceMinor: packageRecord.priceMinor,
+        currency: packageRecord.currency,
+        durationDays: packageRecord.durationDays,
+        status: packageRecord.status
+      }
+    });
+  } catch {
+    return NextResponse.json({ error: "Package is not available for checkout." }, { status: 409 });
+  }
 
   const order = await prisma.order.create({
     data: {
