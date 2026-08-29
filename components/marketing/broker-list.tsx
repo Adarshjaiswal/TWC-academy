@@ -12,7 +12,10 @@ export function BrokerListSection() {
         <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-end">
           <div className="max-w-3xl">
             <Badge tone="premium">Broker Signup</Badge>
-            <h2 className="mt-4 text-3xl font-black md:text-5xl">Collaborated broker list with direct signup links.</h2>
+            <h2 className="mt-4 text-3xl font-black md:text-5xl">Your Trading Journey Starts Here</h2>
+            <p className="mt-4 text-xl font-black leading-7 text-[var(--premium)] md:text-2xl">
+              Choose Your Trading Partner. Trade with Confidence.
+            </p>
             <p className="mt-4 text-sm leading-6 text-[var(--muted)]">
               Open broker accounts on the broker websites through the supplied links. TWC does not hold client funds, place trades, or operate broker execution.
             </p>

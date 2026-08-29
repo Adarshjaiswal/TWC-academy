@@ -10,10 +10,10 @@ import {
   GraduationCap,
   MapPin,
   MessageCircle,
-  NotebookPen,
   ShieldCheck,
   TimerReset
 } from "lucide-react";
+import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { ButtonLink } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -22,10 +22,10 @@ import { FaqList } from "@/components/marketing/faq-list";
 import { HeroVisual } from "@/components/marketing/hero-visual";
 import { MarketParticleField } from "@/components/marketing/market-particle-field";
 import { ProfitLossChart } from "@/components/marketing/profit-loss-chart";
+import { SocialMediaSection } from "@/components/marketing/social-links";
 import { ScrollReveal } from "@/components/motion/scroll-reveal";
 import { env } from "@/lib/env";
 import {
-  academyBonusFixtures,
   academyRoadmapFixtures,
   faqFixtures,
   marketCoverageFixtures,
@@ -125,6 +125,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <SocialMediaSection />
 
       <section className="section" id="curriculum">
         <ScrollReveal className="container-shell">
@@ -281,35 +283,56 @@ export default function HomePage() {
       </section>
 
       <section className="section section-band">
-        <ScrollReveal className="container-shell grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-          <Card className="border-[rgba(229,185,91,0.34)]">
-            <Badge tone="premium">Meet Your Mentor</Badge>
-            <h2 className="mt-4 text-3xl font-black">A R Danish</h2>
-            <p className="mt-2 text-sm font-bold text-[var(--muted)]">Trader + Founder | TWC Capital / TWC Academy</p>
-            <p className="mt-5 text-sm leading-6 text-[var(--muted)]">
-              Based in Dubai, UAE, A R Danish focuses on price action, risk management, disciplined execution, macro-driven behavior, and structured professional trading approaches.
-            </p>
-            <div className="mt-5 grid gap-3 sm:grid-cols-2">
-              <div className="line-tile p-4">
-                <MapPin aria-hidden className="h-4 w-4 text-[var(--premium)]" />
-                <p className="mt-2 text-sm font-black">Dubai, UAE</p>
-              </div>
-              <div className="line-tile p-4">
-                <Brain aria-hidden className="h-4 w-4 text-[var(--primary)]" />
-                <p className="mt-2 text-sm font-black">Technical and macro analysis</p>
-              </div>
-            </div>
-          </Card>
-          <Card>
-            <Badge>Every Student Receives</Badge>
-            <h2 className="mt-4 text-3xl font-black">Templates, calculators, checklists, and community access.</h2>
-            <div className="mt-5 grid gap-3 sm:grid-cols-2">
-              {academyBonusFixtures.map((bonus) => (
-                <div className="line-tile flex items-center gap-3 p-3 text-sm font-bold" key={bonus}>
-                  <NotebookPen aria-hidden className="h-4 w-4 shrink-0 text-[var(--primary)]" />
-                  {bonus}
+        <ScrollReveal className="container-shell">
+          <Card className="border-[rgba(229,185,91,0.46)] p-0">
+            <div className="grid lg:min-h-[760px] lg:grid-cols-2">
+              <div className="relative flex min-h-[680px] items-center justify-center overflow-hidden border-b border-[rgba(255,209,102,0.22)] bg-[radial-gradient(circle_at_50%_16%,rgba(255,209,102,0.2),transparent_31%),linear-gradient(180deg,rgba(4,8,16,0.96),rgba(6,4,2,0.98))] p-5 sm:p-7 lg:min-h-full lg:border-b-0 lg:border-r">
+                <div className="pointer-events-none absolute inset-5 border border-[rgba(255,209,102,0.22)]" />
+                <div className="pointer-events-none absolute inset-x-10 top-8 h-px bg-[linear-gradient(90deg,transparent,rgba(255,209,102,0.54),transparent)]" />
+                <div className="relative z-10 flex h-full w-full items-center justify-center">
+                  <Image
+                    alt="A R Danish"
+                    className="h-auto w-full max-w-[420px] object-contain drop-shadow-[0_34px_70px_rgba(0,0,0,0.72)]"
+                    height={720}
+                    sizes="(min-width: 1280px) 420px, (min-width: 1024px) 42vw, 88vw"
+                    src="/team/ar-danish-photo.jpg"
+                    width={398}
+                  />
                 </div>
-              ))}
+              </div>
+              <div className="relative flex min-w-0 flex-col justify-center p-6 sm:p-10 lg:p-12 xl:p-16">
+                <div className="pointer-events-none absolute right-8 top-8 h-32 w-32 border border-[rgba(255,209,102,0.16)] opacity-40" />
+                <div className="relative max-w-xl">
+                  <Badge tone="premium">Meet Your Mentor</Badge>
+                  <h2 className="mt-6 text-5xl font-black leading-[0.92] md:text-6xl">A R Danish</h2>
+                  <p className="mt-5 text-lg font-black leading-7 text-[var(--muted)]">Trader + Founder | TWC Capital / TWC Academy</p>
+                  <p className="mt-8 text-base leading-8 text-[var(--muted)]">
+                    Based in Dubai, UAE, A R Danish focuses on price action, risk management, disciplined execution, macro-driven behavior, and structured professional trading approaches.
+                  </p>
+                  <div className="mt-10 grid gap-4 sm:grid-cols-2">
+                    <div className="line-tile flex min-h-36 flex-col justify-between p-5">
+                      <MapPin aria-hidden className="h-6 w-6 text-[var(--premium)]" />
+                      <p className="mt-5 text-lg font-black">Dubai, UAE</p>
+                      <p className="mt-2 text-sm leading-6 text-[var(--muted)]">UAE-based market mentorship.</p>
+                    </div>
+                    <div className="line-tile flex min-h-36 flex-col justify-between p-5">
+                      <Brain aria-hidden className="h-6 w-6 text-[var(--primary)]" />
+                      <p className="mt-5 text-lg font-black">Technical and macro analysis</p>
+                      <p className="mt-2 text-sm leading-6 text-[var(--muted)]">Structured chart and market context.</p>
+                    </div>
+                    <div className="line-tile flex min-h-36 flex-col justify-between p-5">
+                      <ShieldCheck aria-hidden className="h-6 w-6 text-[var(--premium)]" />
+                      <p className="mt-5 text-lg font-black">Risk-first execution</p>
+                      <p className="mt-2 text-sm leading-6 text-[var(--muted)]">Clear planning before live-market action.</p>
+                    </div>
+                    <div className="line-tile flex min-h-36 flex-col justify-between p-5">
+                      <ChartSpline aria-hidden className="h-6 w-6 text-[var(--primary)]" />
+                      <p className="mt-5 text-lg font-black">Gold, Forex and Crypto</p>
+                      <p className="mt-2 text-sm leading-6 text-[var(--muted)]">Market education with structured review.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </Card>
         </ScrollReveal>

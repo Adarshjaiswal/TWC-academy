@@ -12,10 +12,10 @@ export function BrandLogo({ className, priority = false }: BrandLogoProps) {
       <Image
         alt="Trade Wave Capital"
         className="h-full w-full object-contain"
-        height={240}
+        height={462}
         priority={priority}
         src="/brand/trade-wave-capital-logo-transparent.png"
-        width={485}
+        width={939}
       />
     </span>
   );
