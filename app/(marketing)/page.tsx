@@ -292,11 +292,11 @@ export default function HomePage() {
                 <div className="relative z-10 flex h-full w-full items-center justify-center">
                   <Image
                     alt="A R Danish"
-                    className="h-auto w-full max-w-[420px] object-contain drop-shadow-[0_34px_70px_rgba(0,0,0,0.72)]"
-                    height={720}
-                    sizes="(min-width: 1280px) 420px, (min-width: 1024px) 42vw, 88vw"
-                    src="/team/ar-danish-photo.jpg"
-                    width={398}
+                    className="h-auto w-full max-w-[430px] object-contain drop-shadow-[0_34px_70px_rgba(0,0,0,0.72)]"
+                    height={2752}
+                    sizes="(min-width: 1280px) 430px, (min-width: 1024px) 42vw, 88vw"
+                    src="/team/ar-danish-founder.jpg"
+                    width={1536}
                   />
                 </div>
               </div>

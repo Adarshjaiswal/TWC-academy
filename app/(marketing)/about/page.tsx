@@ -32,10 +32,10 @@ export default function AboutPage() {
                 <Image
                   alt="A R Danish"
                   className="h-auto w-full object-contain"
-                  height={720}
+                  height={2752}
                   sizes="96px"
-                  src="/team/ar-danish-photo.jpg"
-                  width={398}
+                  src="/team/ar-danish-founder.jpg"
+                  width={1536}
                 />
               </div>
               <div>
