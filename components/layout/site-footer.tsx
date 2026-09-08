@@ -31,7 +31,6 @@ export function SiteFooter() {
           <div className="grid gap-2 text-sm text-[var(--muted)]">
             <Link href="/services">Curriculum</Link>
             <Link href="/packages">Programs</Link>
-            <Link href="/careers">Careers</Link>
             <Link href="/brokers">Broker Signup</Link>
             <Link href="/results">Results</Link>
             <Link href="/faq">FAQ</Link>

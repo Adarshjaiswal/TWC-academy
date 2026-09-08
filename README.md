@@ -17,7 +17,7 @@ This stack uses Prisma 7 `prisma.config.ts` and `@prisma/adapter-mariadb` for My
 
 ## Route Map
 
-- Public: `/`, `/about`, `/services`, `/packages`, `/brokers`, `/careers`, `/results`, `/faq`, `/contact`, `/legal/[slug]`
+- Public: `/`, `/about`, `/services`, `/packages`, `/brokers`, `/results`, `/faq`, `/contact`, `/legal/[slug]`
 - Preview: `/preview` documents major public, member, and admin states when screenshots are not available.
 - Auth: `/sign-in`, `/sign-up`, `/verify-email`, `/forgot-password`, `/reset-password`
 - Member: `/dashboard`, `/dashboard/membership`, `/dashboard/orders`, `/dashboard/telegram`, `/dashboard/profile`, `/dashboard/support`
