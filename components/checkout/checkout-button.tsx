@@ -13,6 +13,7 @@ type CheckoutButtonProps = {
 type CheckoutResponse = {
   checkoutUrl?: string;
   error?: string;
+  provider?: string;
 };
 
 export function CheckoutButton({ className, packageId, signedIn }: CheckoutButtonProps) {
@@ -49,7 +50,11 @@ export function CheckoutButton({ className, packageId, signedIn }: CheckoutButto
         throw new Error(payload.error ?? "Checkout could not be created.");
       }
 
-      router.push(payload.checkoutUrl);
+      if (payload.checkoutUrl.startsWith("http")) {
+        window.location.assign(payload.checkoutUrl);
+      } else {
+        router.push(payload.checkoutUrl);
+      }
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Checkout could not be created.");
     } finally {

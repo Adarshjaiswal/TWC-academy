@@ -1,6 +1,6 @@
 # TWC Academy
 
-TWC Academy is a single Next.js App Router monolith for a trading education, analysis, community, and membership platform. It includes public marketing pages, email/password auth, database-backed sessions, member dashboard, admin workspace, package management data model, Razorpay-ready checkout/webhook flow, Telegram access state, MySQL/Prisma persistence, seed data, tests, and operations docs.
+TWC Academy is a single Next.js App Router monolith for a trading education, analysis, community, and membership platform. It includes public marketing pages, email/password auth, database-backed sessions, member dashboard, admin workspace, package management data model, Ziina/Razorpay-ready checkout and webhook flow, Telegram access state, MySQL/Prisma persistence, seed data, tests, and operations docs.
 
 ## Version Set
 
@@ -17,12 +17,12 @@ This stack uses Prisma 7 `prisma.config.ts` and `@prisma/adapter-mariadb` for My
 
 ## Route Map
 
-- Public: `/`, `/about`, `/services`, `/packages`, `/results`, `/faq`, `/contact`, `/legal/[slug]`
+- Public: `/`, `/about`, `/services`, `/packages`, `/brokers`, `/careers`, `/results`, `/faq`, `/contact`, `/legal/[slug]`
 - Preview: `/preview` documents major public, member, and admin states when screenshots are not available.
 - Auth: `/sign-in`, `/sign-up`, `/verify-email`, `/forgot-password`, `/reset-password`
 - Member: `/dashboard`, `/dashboard/membership`, `/dashboard/orders`, `/dashboard/telegram`, `/dashboard/profile`, `/dashboard/support`
-- Admin: `/admin`, `/admin/users`, `/admin/packages`, `/admin/orders`, `/admin/memberships`, `/admin/telegram`, `/admin/content`, `/admin/testimonials`, `/admin/faqs`, `/admin/leads`, `/admin/support`, `/admin/settings`, `/admin/audit-logs`
-- API: `/api/checkout`, `/api/webhooks/razorpay`, `/api/telegram/webhook`, `/api/cron/membership-expiry`, `/api/health`, `/api/auth/[...nextauth]`
+- Admin: `/admin`, `/admin/users`, `/admin/packages`, `/admin/orders`, `/admin/payments`, `/admin/memberships`, `/admin/telegram`, `/admin/content`, `/admin/testimonials`, `/admin/faqs`, `/admin/leads`, `/admin/support`, `/admin/settings`, `/admin/audit-logs`
+- API: `/api/checkout`, `/api/webhooks/ziina`, `/api/webhooks/razorpay`, `/api/telegram/webhook`, `/api/cron/membership-expiry`, `/api/health`, `/api/auth/[...nextauth]`
 
 ## Data Model
 
@@ -74,7 +74,7 @@ Use Nginx as a reverse proxy to `http://127.0.0.1:3000`, then issue SSL with Cer
 - Protected routes are guarded at the routing layer through `proxy.ts` and rechecked in server helpers.
 - Admin/member pages use server-side session reads.
 - Checkout uses server database package pricing only.
-- Razorpay webhook handling verifies signatures, records event IDs, and processes payment activation in a database transaction.
+- Ziina and Razorpay webhook handling verifies signatures, records event IDs, validates amount/currency, and processes payment activation in a database transaction.
 - Production runtime env validation requires real auth, payment, and Telegram secrets.
 - Rich CMS HTML should pass through the constrained sanitizer in `lib/security.ts`.
 - Secrets are environment-only and are not exposed in admin settings.
@@ -82,6 +82,6 @@ Use Nginx as a reverse proxy to `http://127.0.0.1:3000`, then issue SSL with Cer
 ## Limitations
 
 - SMTP sends to a development logger unless real SMTP credentials are provided.
-- Razorpay checkout falls back to a mock checkout URL when sandbox credentials are absent.
+- Ziina/Razorpay checkout falls back to a mock checkout URL in local development when selected provider credentials are absent.
 - Telegram managed mode has schema, jobs, status tracking, and webhook validation, but real invite creation/revocation requires bot credentials and private-channel admin setup.
 - Legal copy, testimonials, results, team claims, and performance data are placeholders pending client/legal approval.

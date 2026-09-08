@@ -37,18 +37,20 @@ export default async function DashboardPage() {
         <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
           <div>
             <h2 className="text-2xl font-black">Recent orders</h2>
-            <p className="mt-2 text-sm text-[var(--muted)]">Provider references and payment state are normalized.</p>
+            <p className="mt-2 text-sm text-[var(--muted)]">Provider references, payment state, and purchase records are normalized.</p>
           </div>
           <ButtonLink href="/packages" variant="secondary">Renew or upgrade</ButtonLink>
         </div>
         <div className="mt-5 overflow-x-auto">
-          <table className="w-full min-w-[620px] text-left text-sm">
+          <table className="w-full min-w-[760px] text-left text-sm">
             <thead className="text-[var(--muted)]">
               <tr>
                 <th className="py-3">Package</th>
                 <th>Status</th>
+                <th>Provider</th>
                 <th>Amount</th>
                 <th>Created</th>
+                <th>Paid</th>
               </tr>
             </thead>
             <tbody>
@@ -56,11 +58,13 @@ export default async function DashboardPage() {
                 <tr className="border-t border-[var(--border)]" key={order.id}>
                   <td className="py-3">{order.package.name}</td>
                   <td>{order.status}</td>
+                  <td className="uppercase">{order.provider}</td>
                   <td>{formatMoney(order.amountMinor, order.currency)}</td>
                   <td>{formatDate(order.createdAt)}</td>
+                  <td>{order.paidAt ? formatDate(order.paidAt) : "Pending"}</td>
                 </tr>
               )) : (
-                <tr><td className="py-4 text-[var(--muted)]" colSpan={4}>No orders yet.</td></tr>
+                <tr><td className="py-4 text-[var(--muted)]" colSpan={6}>No orders yet.</td></tr>
               )}
             </tbody>
           </table>

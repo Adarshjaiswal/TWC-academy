@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ClipboardList, FileText, Home, LifeBuoy, MessageSquare, Package, Receipt, Send, Settings, Shield, Users, WalletCards } from "lucide-react";
+import { ClipboardList, CreditCard, FileText, Home, LifeBuoy, MessageSquare, Package, Receipt, Send, Settings, Shield, Users, WalletCards } from "lucide-react";
 import { SignOutButton } from "@/components/auth/sign-out-button";
 import { Badge } from "@/components/ui/badge";
 import { requireAdmin } from "@/lib/auth/session";
@@ -11,6 +11,7 @@ const nav = [
   ["Users", "/admin/users", Users],
   ["Packages", "/admin/packages", Package],
   ["Orders", "/admin/orders", Receipt],
+  ["Payments", "/admin/payments", CreditCard],
   ["Memberships", "/admin/memberships", WalletCards],
   ["Telegram", "/admin/telegram", Send],
   ["Content", "/admin/content", FileText],

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth/session";
 import { createProviderCheckout } from "@/lib/adapters/payments";
 import { checkoutRequestSchema, createServerPricedOrder } from "@/lib/domain/checkout";
+import { env } from "@/lib/env";
 import { prisma } from "@/lib/prisma";
 
 export async function POST(request: Request) {
@@ -36,7 +37,7 @@ export async function POST(request: Request) {
   const order = await prisma.order.create({
     data: {
       ...pricedOrder,
-      provider: "razorpay",
+      provider: env.PAYMENT_PROVIDER,
       status: "CREATED"
     }
   });
@@ -55,8 +56,10 @@ export async function POST(request: Request) {
     data: {
       status: "PENDING",
       provider: checkout.provider,
+      providerCheckoutId: checkout.providerCheckoutId,
       providerOrderId: checkout.providerOrderId,
-      checkoutUrl: checkout.checkoutUrl
+      checkoutUrl: checkout.checkoutUrl,
+      metadata: checkout.metadata
     }
   });
 

@@ -11,8 +11,11 @@ export async function getMemberOverview(userId: string) {
       prisma.order.findMany({
         where: { userId },
         orderBy: { createdAt: "desc" },
-        take: 5,
-        include: { package: true }
+        take: 10,
+        include: {
+          package: true,
+          payments: { orderBy: { createdAt: "desc" }, take: 3 }
+        }
       }),
       prisma.telegramAccess.findFirst({
         where: { userId },

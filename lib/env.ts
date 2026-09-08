@@ -12,10 +12,23 @@ const envSchema = z
     APP_URL: z.string().url().default("http://127.0.0.1:3000"),
     AUTH_SECRET: z.string().min(32).default(developmentSecret),
     SESSION_COOKIE_NAME: z.string().default("authjs.session-token"),
-    PAYMENT_PROVIDER: z.enum(["razorpay", "mock"]).default("razorpay"),
+    PAYMENT_PROVIDER: z.enum(["razorpay", "ziina", "mock"]).default("ziina"),
     RAZORPAY_KEY_ID: z.string().optional(),
     RAZORPAY_KEY_SECRET: z.string().optional(),
     RAZORPAY_WEBHOOK_SECRET: z.string().optional(),
+    ZIINA_API_BASE_URL: z.string().url().default("https://api-v2.ziina.com/api"),
+    ZIINA_API_TOKEN: z.string().optional(),
+    ZIINA_WEBHOOK_SECRET: z.string().optional(),
+    ZIINA_TEST_MODE: z
+      .enum(["true", "false"])
+      .default("true")
+      .transform((value) => value === "true"),
+    ZIINA_ALLOW_TIPS: z
+      .enum(["true", "false"])
+      .default("false")
+      .transform((value) => value === "true"),
+    ZIINA_PAYMENT_EXPIRY_MINUTES: z.coerce.number().int().positive().max(1440).default(60),
+    ZIINA_WEBHOOK_ALLOWED_IPS: z.string().default("3.29.184.186,3.29.190.95,20.233.47.127,13.202.161.181"),
     TELEGRAM_MODE: z.enum(["redirect", "managed"]).default("redirect"),
     TELEGRAM_FREE_CHANNEL_URL: z.string().url().default("https://t.me/TWClive"),
     TELEGRAM_PREMIUM_CHANNEL_LABEL: z.string().default("TWC Premium Telegram Signals"),
@@ -46,6 +59,17 @@ const envSchema = z
               code: "custom",
               path: [key],
               message: `${key} is required in production.`
+            });
+          }
+        }
+      }
+      if (value.PAYMENT_PROVIDER === "ziina") {
+        for (const key of ["ZIINA_API_TOKEN", "ZIINA_WEBHOOK_SECRET"] as const) {
+          if (!value[key]) {
+            ctx.addIssue({
+              code: "custom",
+              path: [key],
+              message: `${key} is required in production when Ziina is the payment provider.`
             });
           }
         }

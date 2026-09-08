@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 type AdminListMap = {
   users: Prisma.UserGetPayload<Record<string, never>>[];
   packages: Prisma.PackageGetPayload<{ include: { features: true } }>[];
-  orders: Prisma.OrderGetPayload<{ include: { user: true; package: true } }>[];
+  orders: Prisma.OrderGetPayload<{ include: { user: true; package: true; payments: true; webhooks: true } }>[];
   memberships: Prisma.MembershipGetPayload<{ include: { user: true; package: true } }>[];
   tickets: Prisma.SupportTicketGetPayload<{ include: { requester: true } }>[];
   leads: Prisma.ContactLeadGetPayload<Record<string, never>>[];
@@ -70,7 +70,16 @@ export async function getAdminList<K extends keyof AdminListMap>(kind: K): Promi
       case "packages":
         return (await prisma.package.findMany({ orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }], take: 25, include: { features: true } })) as AdminListMap[K];
       case "orders":
-        return (await prisma.order.findMany({ orderBy: { createdAt: "desc" }, take: 25, include: { user: true, package: true } })) as AdminListMap[K];
+        return (await prisma.order.findMany({
+          orderBy: { createdAt: "desc" },
+          take: 25,
+          include: {
+            user: true,
+            package: true,
+            payments: { orderBy: { createdAt: "desc" }, take: 3 },
+            webhooks: { orderBy: { createdAt: "desc" }, take: 3 }
+          }
+        })) as AdminListMap[K];
       case "memberships":
         return (await prisma.membership.findMany({ orderBy: { createdAt: "desc" }, take: 25, include: { user: true, package: true } })) as AdminListMap[K];
       case "tickets":
@@ -84,5 +93,65 @@ export async function getAdminList<K extends keyof AdminListMap>(kind: K): Promi
     }
   } catch {
     return [] as AdminListMap[K];
+  }
+}
+
+export async function getPaymentOperations() {
+  try {
+    const [orders, payments, webhooks, orderStatusGroups, providerStatusGroups] = await Promise.all([
+      prisma.order.findMany({
+        orderBy: { createdAt: "desc" },
+        take: 50,
+        include: {
+          user: true,
+          package: true,
+          payments: { orderBy: { createdAt: "desc" }, take: 3 },
+          webhooks: { orderBy: { createdAt: "desc" }, take: 3 }
+        }
+      }),
+      prisma.payment.findMany({
+        orderBy: { createdAt: "desc" },
+        take: 25,
+        include: {
+          order: {
+            include: {
+              package: true,
+              user: true
+            }
+          }
+        }
+      }),
+      prisma.webhookEvent.findMany({
+        orderBy: { createdAt: "desc" },
+        take: 25,
+        include: { order: true }
+      }),
+      prisma.order.groupBy({
+        by: ["status"],
+        _count: { _all: true },
+        _sum: { amountMinor: true }
+      }),
+      prisma.order.groupBy({
+        by: ["provider", "status"],
+        _count: { _all: true },
+        _sum: { amountMinor: true }
+      })
+    ]);
+
+    return {
+      orders,
+      payments,
+      webhooks,
+      orderStatusGroups,
+      providerStatusGroups
+    };
+  } catch {
+    return {
+      orders: [],
+      payments: [],
+      webhooks: [],
+      orderStatusGroups: [],
+      providerStatusGroups: []
+    };
   }
 }

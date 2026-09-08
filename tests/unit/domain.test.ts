@@ -91,6 +91,37 @@ describe("webhook verification and normalization", () => {
       providerOrderId: "order_1"
     });
   });
+
+  it("normalizes Ziina payment intent updates", () => {
+    const raw = JSON.stringify({
+      id: "evt_ziina_1",
+      event: "payment_intent.status.updated",
+      data: {
+        id: "pi_ziina_1",
+        amount: 149900,
+        currency_code: "AED",
+        status: "completed",
+        operation_id: "op_ziina_1",
+        card_details: {
+          card_brand: "visa",
+          card_last_four: "4242"
+        }
+      }
+    });
+    const signature = signWebhookPayload(raw, "ziina-secret");
+
+    expect(verifyWebhookSignature(raw, "ziina-secret", signature)).toBe(true);
+    expect(normalizeWebhookEvent(raw, "ziina")).toMatchObject({
+      eventId: "evt_ziina_1",
+      eventType: "payment_intent.status.updated",
+      paymentId: "pi_ziina_1",
+      providerOrderId: "pi_ziina_1",
+      amountMinor: 149900,
+      currency: "AED",
+      status: "completed",
+      method: "visa"
+    });
+  });
 });
 
 describe("Telegram eligibility", () => {

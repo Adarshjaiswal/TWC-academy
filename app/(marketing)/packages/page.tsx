@@ -112,7 +112,7 @@ export default async function PackagesPage({ searchParams }: PackagesPageProps) 
               <div>
                 <h2 className="text-2xl font-black">Payment gateway ready</h2>
                 <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
-                  Razorpay checkout creates provider orders server-side. Membership and premium Telegram access activate only after verified payment events are received.
+                  Ziina checkout creates provider payment intents server-side. Membership and premium Telegram access activate only after verified payment events are received.
                 </p>
               </div>
             </div>
