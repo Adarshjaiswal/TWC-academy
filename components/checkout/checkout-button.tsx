@@ -21,11 +21,22 @@ export function CheckoutButton({ className, packageId, signedIn }: CheckoutButto
   const [pending, setPending] = useState(false);
   const [message, setMessage] = useState("");
 
-  if (!signedIn || !packageId) {
+  if (!signedIn) {
     return (
       <ButtonLink className={className} href="/sign-in">
         Sign In to Pay
       </ButtonLink>
+    );
+  }
+
+  if (!packageId) {
+    return (
+      <div className={className}>
+        <Button className="w-full" disabled type="button">
+          Program Setup Required
+        </Button>
+        <p className="mt-2 text-xs leading-5 text-[var(--muted)]">This program needs to be published in the database before checkout can start.</p>
+      </div>
     );
   }
 

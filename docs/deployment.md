@@ -48,9 +48,10 @@ If `TELEGRAM_MODE=managed`, also define bot token, webhook secret, and private c
 1. Back up the database.
 2. Deploy code.
 3. Run `npm run db:deploy`.
-4. Start the Next.js server with `npm run start`.
-5. Verify `/api/health`.
-6. Verify auth, checkout sandbox, webhook delivery, and member Telegram eligibility.
+4. Run `npm run db:sync-packages` after fresh database setup or when package fixture pricing/content changes.
+5. Start the Next.js server with `npm run start`.
+6. Verify `/api/health`.
+7. Verify auth, checkout sandbox, webhook delivery, and member Telegram eligibility.
 
 ## Headers
 
