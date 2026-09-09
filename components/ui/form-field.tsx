@@ -28,3 +28,15 @@ export function Textarea({ className, ...props }: ComponentPropsWithoutRef<"text
     />
   );
 }
+
+export function Select({ className, ...props }: ComponentPropsWithoutRef<"select">) {
+  return (
+    <select
+      className={cn(
+        "form-control focus-ring min-h-11 rounded-lg px-3 py-2",
+        className
+      )}
+      {...props}
+    />
+  );
+}
