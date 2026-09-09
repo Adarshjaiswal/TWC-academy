@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useMemo, useState } from "react";
 import {
   forgotPasswordAction,
   resetPasswordAction,
@@ -14,6 +14,13 @@ import { Card } from "@/components/ui/card";
 import { Field, Input } from "@/components/ui/form-field";
 
 const initialState: FormState = { ok: false, message: "" };
+
+const passwordRules = [
+  ["length", "At least 10 characters"],
+  ["lowercase", "One lowercase letter"],
+  ["uppercase", "One uppercase letter"],
+  ["number", "One number"]
+] as const;
 
 function Status({ state }: { state: FormState }) {
   if (!state.message) return null;
@@ -46,27 +53,80 @@ export function SignInForm() {
 
 export function SignUpForm() {
   const [state, action, pending] = useActionState(signUpAction, initialState);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [termsAccepted, setTermsAccepted] = useState(false);
+
+  const passwordState = useMemo(
+    () => ({
+      length: password.length >= 10,
+      lowercase: /[a-z]/.test(password),
+      uppercase: /[A-Z]/.test(password),
+      number: /[0-9]/.test(password)
+    }),
+    [password]
+  );
+  const passwordReady = Object.values(passwordState).every(Boolean);
+  const emailReady = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const confirmReady = Boolean(confirmPassword) && password === confirmPassword;
+  const formReady = name.trim().length >= 2 && emailReady && passwordReady && confirmReady && termsAccepted;
+
   return (
     <Card>
       <form action={action} className="grid gap-4">
         <Field>
           Name
-          <Input autoComplete="name" name="name" required />
+          <Input autoComplete="name" name="name" onChange={(event) => setName(event.target.value)} required value={name} />
         </Field>
         <Field>
           Email
-          <Input autoComplete="email" name="email" required type="email" />
+          <Input autoComplete="email" name="email" onChange={(event) => setEmail(event.target.value)} required type="email" value={email} />
         </Field>
         <Field>
           Password
-          <Input autoComplete="new-password" name="password" required type="password" />
+          <Input
+            aria-describedby="signup-password-rules"
+            autoComplete="new-password"
+            name="password"
+            onChange={(event) => setPassword(event.target.value)}
+            required
+            type="password"
+            value={password}
+          />
         </Field>
+        <div className="grid gap-2 rounded-lg border border-[var(--border)] bg-[rgba(255,209,102,0.06)] p-3" id="signup-password-rules">
+          <p className="text-xs font-black uppercase text-[var(--muted)]">Password requirements</p>
+          <div className="grid gap-2 sm:grid-cols-2">
+            {passwordRules.map(([key, label]) => {
+              const met = passwordState[key];
+              return (
+                <p className={met ? "text-sm font-semibold text-[var(--success)]" : "text-sm text-[var(--muted)]"} key={key}>
+                  <span aria-hidden>{met ? "OK" : "-"}</span> {label}
+                </p>
+              );
+            })}
+          </div>
+        </div>
         <Field>
           Confirm password
-          <Input autoComplete="new-password" name="confirmPassword" required type="password" />
+          <Input
+            autoComplete="new-password"
+            name="confirmPassword"
+            onChange={(event) => setConfirmPassword(event.target.value)}
+            required
+            type="password"
+            value={confirmPassword}
+          />
         </Field>
+        {confirmPassword ? (
+          <p className={confirmReady ? "text-sm font-semibold text-[var(--success)]" : "text-sm text-[var(--error)]"}>
+            {confirmReady ? "Passwords match." : "Passwords must match."}
+          </p>
+        ) : null}
         <label className="flex items-start gap-3 text-sm leading-6 text-[var(--muted)]">
-          <input className="mt-1" name="terms" required type="checkbox" />
+          <input className="mt-1" name="terms" onChange={(event) => setTermsAccepted(event.target.checked)} required type="checkbox" />
           I accept the terms, risk disclaimer, and platform limitations.
         </label>
         <label className="flex items-start gap-3 text-sm leading-6 text-[var(--muted)]">
@@ -74,7 +134,7 @@ export function SignUpForm() {
           I agree to receive optional marketing updates.
         </label>
         <Status state={state} />
-        <Button disabled={pending}>{pending ? "Creating..." : "Create Account"}</Button>
+        <Button disabled={pending || !formReady}>{pending ? "Creating..." : "Create Account"}</Button>
       </form>
     </Card>
   );
