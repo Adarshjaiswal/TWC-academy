@@ -29,6 +29,18 @@ CRON_SECRET
 
 Use Razorpay variables only when `PAYMENT_PROVIDER=razorpay`.
 
+For Hostinger email delivery, also define:
+
+```bash
+SMTP_HOST=smtp.hostinger.com
+SMTP_PORT=465
+SMTP_SECURE=true
+SMTP_USER=support@twcfx.com
+SMTP_PASS
+EMAIL_FROM=Trade Wave Capital <support@twcfx.com>
+SUPPORT_EMAIL=support@twcfx.com
+```
+
 If `TELEGRAM_MODE=managed`, also define bot token, webhook secret, and private channel ID.
 
 ## Release

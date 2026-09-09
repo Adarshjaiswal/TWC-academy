@@ -1,9 +1,12 @@
 import { env } from "@/lib/env";
+import nodemailer from "nodemailer";
 
 export type EmailMessage = {
   to: string;
   subject: string;
   text: string;
+  html?: string;
+  replyTo?: string;
 };
 
 export async function sendEmail(message: EmailMessage) {
@@ -16,11 +19,33 @@ export async function sendEmail(message: EmailMessage) {
     return { mode: "logged" as const };
   }
 
-  console.info("[email:adapter-placeholder]", {
+  const port = env.SMTP_PORT ?? 587;
+  const transporter = nodemailer.createTransport({
     host: env.SMTP_HOST,
-    port: env.SMTP_PORT,
-    to: message.to,
-    subject: message.subject
+    port,
+    secure: env.SMTP_SECURE ?? port === 465,
+    auth: {
+      user: env.SMTP_USER,
+      pass: env.SMTP_PASS
+    }
   });
-  return { mode: "smtp-placeholder" as const };
+
+  const result = await transporter.sendMail({
+    from: env.EMAIL_FROM,
+    to: message.to,
+    replyTo: message.replyTo,
+    subject: message.subject,
+    text: message.text,
+    html: message.html
+  });
+
+  console.info("[email:smtp-sent]", {
+    host: env.SMTP_HOST,
+    port,
+    to: message.to,
+    subject: message.subject,
+    messageId: result.messageId
+  });
+
+  return { mode: "smtp" as const, messageId: result.messageId };
 }

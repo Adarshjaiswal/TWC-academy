@@ -49,9 +49,9 @@ export function SiteFooter() {
         <div>
           <p className="mb-3 text-sm font-black uppercase text-[var(--text)]">Contact</p>
           <div className="grid gap-3 text-sm text-[var(--muted)]">
-            <Link className="flex items-center gap-2" href="mailto:ardanishofficial@outlook.com">
+            <Link className="flex items-center gap-2" href="mailto:support@twcfx.com">
               <Mail aria-hidden className="h-4 w-4" />
-              ardanishofficial@outlook.com
+              support@twcfx.com
             </Link>
             <Link className="flex items-center gap-2" href="tel:+971585800746">
               <Phone aria-hidden className="h-4 w-4" />

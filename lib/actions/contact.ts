@@ -3,6 +3,8 @@
 import { headers } from "next/headers";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
+import { sendEmail } from "@/lib/email/service";
+import { env } from "@/lib/env";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { hashToken } from "@/lib/security";
 
@@ -49,6 +51,26 @@ export async function submitContactAction(_: ContactState, formData: FormData): 
       name: parsed.data.name,
       email: parsed.data.email,
       subject: parsed.data.subject
+    });
+  }
+
+  try {
+    await sendEmail({
+      to: env.SUPPORT_EMAIL,
+      replyTo: parsed.data.email,
+      subject: `TWC enquiry: ${parsed.data.subject}`,
+      text: [
+        `Name: ${parsed.data.name}`,
+        `Email: ${parsed.data.email}`,
+        `Phone: ${parsed.data.phone || "Not provided"}`,
+        "",
+        parsed.data.message
+      ].join("\n")
+    });
+  } catch (error) {
+    console.error("[contact:email-failed]", {
+      subject: parsed.data.subject,
+      message: error instanceof Error ? error.message : "Unknown email error"
     });
   }
 

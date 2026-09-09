@@ -19,7 +19,7 @@ export default function ContactPage() {
           </p>
           <Card className="mt-8">
             <h2 className="text-xl font-black">Contact details</h2>
-            <p className="mt-3 text-sm text-[var(--muted)]">Email: ardanishofficial@outlook.com</p>
+            <p className="mt-3 text-sm text-[var(--muted)]">Email: support@twcfx.com</p>
             <p className="mt-2 text-sm text-[var(--muted)]">WhatsApp: +971 58 580 0746</p>
           </Card>
         </div>

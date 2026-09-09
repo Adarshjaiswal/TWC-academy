@@ -81,7 +81,7 @@ Use Nginx as a reverse proxy to `http://127.0.0.1:3000`, then issue SSL with Cer
 
 ## Limitations
 
-- SMTP sends to a development logger unless real SMTP credentials are provided.
+- SMTP sends through the configured provider in production and logs locally when SMTP credentials are absent.
 - Ziina/Razorpay checkout falls back to a mock checkout URL in local development when selected provider credentials are absent.
 - Telegram managed mode has schema, jobs, status tracking, and webhook validation, but real invite creation/revocation requires bot credentials and private-channel admin setup.
 - Legal copy, testimonials, results, team claims, and performance data are placeholders pending client/legal approval.

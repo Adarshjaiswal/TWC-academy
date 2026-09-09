@@ -8,6 +8,7 @@ import { randomToken, hashToken } from "@/lib/security";
 import { sendEmail } from "@/lib/email/service";
 import { createSession, destroyCurrentSession } from "@/lib/auth/session";
 import { hashPassword, passwordSchema, verifyPassword } from "@/lib/domain/password";
+import { env } from "@/lib/env";
 import { addDays } from "@/lib/utils";
 
 export type FormState = {
@@ -49,6 +50,14 @@ const resetSchema = z
     path: ["confirmPassword"],
     message: "Passwords do not match."
   });
+
+function buildAppUrl(path: string, params: Record<string, string>) {
+  const url = new URL(path, env.APP_URL);
+  for (const [key, value] of Object.entries(params)) {
+    url.searchParams.set(key, value);
+  }
+  return url.toString();
+}
 
 export async function signInAction(_: FormState, formData: FormData): Promise<FormState> {
   const parsed = signInSchema.safeParse(Object.fromEntries(formData));
@@ -120,13 +129,19 @@ export async function signUpAction(_: FormState, formData: FormData): Promise<Fo
     return { ok: false, message: "We could not create that account. The email may already exist." };
   }
 
+  const verificationUrl = buildAppUrl("/verify-email", {
+    email: parsed.data.email,
+    token: verificationToken
+  });
+
   await sendEmail({
     to: parsed.data.email,
     subject: "Verify your TWC account",
-    text: `Use this development verification link: /verify-email?email=${encodeURIComponent(parsed.data.email)}&token=${verificationToken}`
+    text: `Verify your Trade Wave Capital account: ${verificationUrl}`,
+    html: `<p>Verify your Trade Wave Capital account:</p><p><a href="${verificationUrl}">${verificationUrl}</a></p>`
   });
 
-  return { ok: true, message: "Account created. Check the development email log for the verification link." };
+  return { ok: true, message: "Account created. Check your email for the verification link." };
 }
 
 export async function verifyEmailAction(_: FormState, formData: FormData): Promise<FormState> {
@@ -173,10 +188,16 @@ export async function forgotPasswordAction(_: FormState, formData: FormData): Pr
         expires: new Date(Date.now() + 1000 * 60 * 30)
       }
     });
+    const resetUrl = buildAppUrl("/reset-password", {
+      email: parsed.data.email,
+      token
+    });
+
     await sendEmail({
       to: parsed.data.email,
       subject: "Reset your TWC password",
-      text: `Use this development reset link: /reset-password?email=${encodeURIComponent(parsed.data.email)}&token=${token}`
+      text: `Reset your Trade Wave Capital password: ${resetUrl}`,
+      html: `<p>Reset your Trade Wave Capital password:</p><p><a href="${resetUrl}">${resetUrl}</a></p>`
     });
   }
 

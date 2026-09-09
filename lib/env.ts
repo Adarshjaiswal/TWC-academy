@@ -37,9 +37,14 @@ const envSchema = z
     TELEGRAM_PRIVATE_CHANNEL_ID: z.string().optional(),
     SMTP_HOST: z.string().optional(),
     SMTP_PORT: z.coerce.number().int().positive().optional(),
+    SMTP_SECURE: z
+      .enum(["true", "false"])
+      .optional()
+      .transform((value) => (value === undefined ? undefined : value === "true")),
     SMTP_USER: z.string().optional(),
     SMTP_PASS: z.string().optional(),
-    EMAIL_FROM: z.string().email().default("TWC <noreply@example.com>"),
+    EMAIL_FROM: z.string().min(3).default("Trade Wave Capital <support@twcfx.com>"),
+    SUPPORT_EMAIL: z.string().email().default("support@twcfx.com"),
     CRON_SECRET: z.string().min(16).default("development-cron-secret")
   })
   .superRefine((value, ctx) => {
@@ -70,6 +75,17 @@ const envSchema = z
               code: "custom",
               path: [key],
               message: `${key} is required in production when Ziina is the payment provider.`
+            });
+          }
+        }
+      }
+      if (value.SMTP_HOST || value.SMTP_USER || value.SMTP_PASS) {
+        for (const key of ["SMTP_HOST", "SMTP_USER", "SMTP_PASS"] as const) {
+          if (!value[key]) {
+            ctx.addIssue({
+              code: "custom",
+              path: [key],
+              message: `${key} is required when SMTP email is configured.`
             });
           }
         }
