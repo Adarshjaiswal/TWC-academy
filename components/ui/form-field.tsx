@@ -9,7 +9,7 @@ export function Input({ className, ...props }: ComponentPropsWithoutRef<"input">
   return (
     <input
       className={cn(
-        "focus-ring min-h-11 rounded-lg border border-[var(--border)] bg-[#091414] px-3 py-2 text-[var(--text)] placeholder:text-[#708989]",
+        "form-control focus-ring min-h-11 rounded-lg px-3 py-2",
         className
       )}
       {...props}
@@ -21,7 +21,7 @@ export function Textarea({ className, ...props }: ComponentPropsWithoutRef<"text
   return (
     <textarea
       className={cn(
-        "focus-ring min-h-32 rounded-lg border border-[var(--border)] bg-[#091414] px-3 py-2 text-[var(--text)] placeholder:text-[#708989]",
+        "form-control focus-ring min-h-32 rounded-lg px-3 py-2",
         className
       )}
       {...props}

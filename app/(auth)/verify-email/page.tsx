@@ -15,7 +15,7 @@ export default async function VerifyEmailPage({ searchParams }: Props) {
     <section className="section">
       <div className="container-shell max-w-lg">
         <h1 className="text-4xl font-black">Verify email</h1>
-        <p className="mt-3 text-sm text-[var(--muted)]">Development mode logs verification links through the email adapter.</p>
+        <p className="mt-3 text-sm text-[var(--muted)]">Confirm your email address to activate your Trade Wave Capital account.</p>
         <div className="mt-8">
           <VerifyEmailForm email={params.email} token={params.token} />
         </div>

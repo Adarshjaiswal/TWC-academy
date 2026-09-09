@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState, useMemo, useState } from "react";
+import { useActionState, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   forgotPasswordAction,
   resetPasswordAction,
@@ -142,19 +143,35 @@ export function SignUpForm() {
 
 export function VerifyEmailForm({ email, token }: { email?: string; token?: string }) {
   const [state, action, pending] = useActionState(verifyEmailAction, initialState);
+  const router = useRouter();
+  const canVerify = Boolean(email && token);
+
+  useEffect(() => {
+    if (!state.ok) return;
+
+    const timeout = window.setTimeout(() => {
+      router.replace("/sign-in");
+    }, 1400);
+
+    return () => window.clearTimeout(timeout);
+  }, [router, state.ok]);
+
   return (
     <Card>
       <form action={action} className="grid gap-4">
         <Field>
           Email
-          <Input defaultValue={email} name="email" required type="email" />
+          <Input defaultValue={email} name="email" readOnly required type="email" />
         </Field>
-        <Field>
-          Verification token
-          <Input defaultValue={token} name="token" required />
-        </Field>
+        <input name="token" type="hidden" value={token ?? ""} />
+        {!canVerify ? (
+          <p className="text-sm leading-6 text-[var(--muted)]">
+            Open the verification link sent to your email inbox.
+          </p>
+        ) : null}
         <Status state={state} />
-        <Button disabled={pending}>{pending ? "Verifying..." : "Verify Email"}</Button>
+        {state.ok ? <p className="text-sm text-[var(--muted)]">Redirecting to sign in...</p> : null}
+        <Button disabled={pending || !canVerify || state.ok}>{pending ? "Verifying..." : "Verify Email"}</Button>
       </form>
     </Card>
   );
