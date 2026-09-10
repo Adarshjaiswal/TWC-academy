@@ -3,15 +3,7 @@ import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 import { env } from "@/lib/env";
 
 function createMariaDbAdapter() {
-  const url = new URL(env.DATABASE_URL);
-  return new PrismaMariaDb({
-    host: url.hostname,
-    port: Number(url.port || 3306),
-    user: decodeURIComponent(url.username),
-    password: decodeURIComponent(url.password),
-    database: url.pathname.replace(/^\//, ""),
-    connectionLimit: 5
-  });
+  return new PrismaMariaDb(env.DATABASE_URL);
 }
 
 const globalForPrisma = globalThis as unknown as {
