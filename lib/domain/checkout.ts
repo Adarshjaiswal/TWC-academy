@@ -17,7 +17,6 @@ export type CheckoutPackage = {
 export function createServerPricedOrder(input: {
   userId: string;
   packageRecord: CheckoutPackage;
-  requestedPriceMinor?: number;
 }) {
   if (input.packageRecord.status !== "ACTIVE") {
     throw new Error("Package is not available for checkout.");
@@ -28,7 +27,6 @@ export function createServerPricedOrder(input: {
     packageId: input.packageRecord.id,
     amountMinor: input.packageRecord.priceMinor,
     currency: input.packageRecord.currency,
-    status: "CREATED" as const,
-    clientPriceIgnored: input.requestedPriceMinor !== undefined
+    status: "CREATED" as const
   };
 }

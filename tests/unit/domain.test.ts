@@ -14,10 +14,9 @@ import { canCreateOneTimeInvite, isTelegramEligible } from "@/lib/domain/telegra
 import { sanitizeRichText } from "@/lib/security";
 
 describe("checkout pricing", () => {
-  it("uses the database package price and ignores client price input", () => {
+  it("uses the database package price", () => {
     const order = createServerPricedOrder({
       userId: "user_1",
-      requestedPriceMinor: 1,
       packageRecord: {
         id: "pkg_1",
         slug: "pro",
@@ -30,7 +29,6 @@ describe("checkout pricing", () => {
     });
 
     expect(order.amountMinor).toBe(1199900);
-    expect(order.clientPriceIgnored).toBe(true);
   });
 });
 
