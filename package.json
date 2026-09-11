@@ -15,6 +15,7 @@
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
+    "db:reset-users": "tsx scripts/reset-users.ts",
     "db:sync-packages": "tsx scripts/sync-packages.ts",
     "db:seed": "tsx prisma/seed.ts",
     "jobs:expiry": "tsx scripts/run-membership-expiry.ts"
