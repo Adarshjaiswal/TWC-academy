@@ -1,9 +1,11 @@
 import Link from "next/link";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, UserCircle } from "lucide-react";
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { ButtonLink } from "@/components/ui/button";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { getCurrentUser } from "@/lib/auth/session";
+import { isAdminRole } from "@/lib/domain/permissions";
 import { env } from "@/lib/env";
 
 const links = [
@@ -17,7 +19,11 @@ const links = [
   ["Contact", "/contact"]
 ] as const;
 
-export function SiteHeader() {
+export async function SiteHeader() {
+  const user = await getCurrentUser();
+  const accountHref = user && isAdminRole(user.role) ? "/admin" : "/dashboard";
+  const displayName = user?.name?.split(" ")[0] || "Account";
+
   return (
     <header className="sticky top-3 z-30 px-3 sm:top-4 sm:px-5 lg:px-6">
       <div className="header-shell mx-auto flex min-h-16 w-full max-w-[1180px] items-center gap-3 border border-[rgba(255,209,102,0.24)] bg-[var(--header-bg)] px-3 py-2 backdrop-blur-xl sm:px-4 lg:min-h-[4.5rem]">
@@ -41,13 +47,20 @@ export function SiteHeader() {
             <MessageCircle aria-hidden className="h-4 w-4" />
             Free Telegram
           </ButtonLink>
-          <ButtonLink className="px-3" href="/sign-in" variant="ghost">
-            Sign In
-          </ButtonLink>
+          {user ? (
+            <ButtonLink className="max-w-[9.5rem] px-3" href={accountHref} title={user.email} variant="ghost">
+              <UserCircle aria-hidden className="h-4 w-4 shrink-0" />
+              <span className="truncate">{displayName}</span>
+            </ButtonLink>
+          ) : (
+            <ButtonLink className="px-3" href="/sign-in" variant="ghost">
+              Sign In
+            </ButtonLink>
+          )}
           <ButtonLink className="px-4" href="/packages">Enroll Today</ButtonLink>
         </div>
         <div className="ml-auto xl:hidden">
-          <MobileNav />
+          <MobileNav accountHref={accountHref} user={user ? { email: user.email, name: displayName } : null} />
         </div>
       </div>
     </header>

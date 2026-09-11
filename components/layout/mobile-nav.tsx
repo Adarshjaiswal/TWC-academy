@@ -1,7 +1,7 @@
 "use client";
 
 import * as Dialog from "@radix-ui/react-dialog";
-import { Menu, X } from "lucide-react";
+import { Menu, UserCircle, X } from "lucide-react";
 import Link from "next/link";
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { ButtonLink } from "@/components/ui/button";
@@ -18,7 +18,15 @@ const links = [
   ["Contact", "/contact"]
 ] as const;
 
-export function MobileNav() {
+type MobileNavProps = {
+  accountHref: string;
+  user: {
+    email: string;
+    name: string;
+  } | null;
+};
+
+export function MobileNav({ accountHref, user }: MobileNavProps) {
   return (
     <Dialog.Root>
       <Dialog.Trigger className="button-futuristic focus-ring inline-flex min-h-11 min-w-11 items-center justify-center border border-[var(--border)] bg-[rgba(255,209,102,0.08)] xl:hidden">
@@ -55,9 +63,16 @@ export function MobileNav() {
               <ButtonLink href="/packages">Enroll Today</ButtonLink>
             </Dialog.Close>
             <Dialog.Close asChild>
-              <ButtonLink href="/sign-in" variant="secondary">
-                Sign In
-              </ButtonLink>
+              {user ? (
+                <ButtonLink href={accountHref} title={user.email} variant="secondary">
+                  <UserCircle aria-hidden className="h-4 w-4" />
+                  {user.name}
+                </ButtonLink>
+              ) : (
+                <ButtonLink href="/sign-in" variant="secondary">
+                  Sign In
+                </ButtonLink>
+              )}
             </Dialog.Close>
           </div>
         </Dialog.Content>
