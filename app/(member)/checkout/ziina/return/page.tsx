@@ -52,7 +52,13 @@ export default async function ZiinaReturnPage({ searchParams }: ZiinaReturnPageP
     try {
       const intent = await getZiinaPaymentIntent(order.providerOrderId);
       await processNormalizedPaymentEvent(normalizeZiinaPaymentIntent(intent));
-    } catch {
+    } catch (error) {
+      console.error("[ziina:return-refresh-failed]", {
+        orderId: order.id,
+        publicOrderId: order.publicId,
+        providerOrderId: order.providerOrderId,
+        error
+      });
       reconciliationError = "We could not refresh Ziina status immediately. The webhook can still update this order automatically.";
     }
   }

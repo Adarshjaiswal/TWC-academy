@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { normalizeWebhookEvent, type PaymentProvider, verifyProviderWebhook, verifyZiinaWebhookSource } from "@/lib/adapters/payments";
+import { normalizeWebhookEvent, type NormalizedPaymentEvent, type PaymentProvider, verifyProviderWebhook, verifyZiinaWebhookSource } from "@/lib/adapters/payments";
 import { processNormalizedPaymentEvent } from "@/lib/domain/payment-processing";
 
 type Props = {
@@ -23,8 +23,27 @@ export async function POST(request: Request, { params }: Props) {
     return NextResponse.json({ error: "Invalid signature." }, { status: 400 });
   }
 
-  const event = normalizeWebhookEvent(rawBody, provider);
-  const result = await processNormalizedPaymentEvent(event);
+  let event: NormalizedPaymentEvent;
+  try {
+    event = normalizeWebhookEvent(rawBody, provider);
+  } catch (error) {
+    console.error("[webhook:normalize-failed]", { provider, error });
+    return NextResponse.json({ error: "Invalid webhook payload." }, { status: 400 });
+  }
+
+  let result;
+  try {
+    result = await processNormalizedPaymentEvent(event);
+  } catch (error) {
+    console.error("[webhook:process-failed]", {
+      provider,
+      eventId: event.eventId,
+      eventType: event.eventType,
+      providerOrderId: event.providerOrderId,
+      error
+    });
+    return NextResponse.json({ error: "Webhook processing failed." }, { status: 500 });
+  }
 
   return NextResponse.json(result);
 }

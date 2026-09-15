@@ -1,27 +1,17 @@
 "use server";
 
 import { headers } from "next/headers";
-import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { sendEmail } from "@/lib/email/service";
 import { env } from "@/lib/env";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { hashToken } from "@/lib/security";
+import { contactSchema } from "@/lib/domain/contact";
 
 export type ContactState = {
   ok: boolean;
   message: string;
 };
-
-export const contactSchema = z.object({
-  name: z.string().min(2).max(120),
-  email: z.string().email().max(180),
-  phone: z.string().max(40).optional(),
-  subject: z.string().min(3).max(160),
-  message: z.string().min(10).max(5000),
-  consent: z.literal("on"),
-  company: z.string().max(0).optional()
-});
 
 export async function submitContactAction(_: ContactState, formData: FormData): Promise<ContactState> {
   const raw = Object.fromEntries(formData);

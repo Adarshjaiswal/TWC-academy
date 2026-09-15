@@ -42,14 +42,32 @@ export async function POST(request: Request) {
     }
   });
 
-  const checkout = await createProviderCheckout({
-    orderId: order.id,
-    publicOrderId: order.publicId,
-    amountMinor: order.amountMinor,
-    currency: order.currency,
-    packageName: packageRecord.name,
-    userEmail: user.email
-  });
+  let checkout: Awaited<ReturnType<typeof createProviderCheckout>>;
+  try {
+    checkout = await createProviderCheckout({
+      orderId: order.id,
+      publicOrderId: order.publicId,
+      amountMinor: order.amountMinor,
+      currency: order.currency,
+      packageName: packageRecord.name,
+      userEmail: user.email
+    });
+  } catch (error) {
+    console.error("[checkout:create-provider-failed]", {
+      orderId: order.id,
+      publicOrderId: order.publicId,
+      packageId: packageRecord.id,
+      provider: env.PAYMENT_PROVIDER,
+      error
+    });
+
+    await prisma.order.update({
+      where: { id: order.id },
+      data: { status: "FAILED", failedAt: new Date() }
+    });
+
+    return NextResponse.json({ error: "Payment checkout could not be created. Please try again or contact support." }, { status: 502 });
+  }
 
   await prisma.order.update({
     where: { id: order.id },

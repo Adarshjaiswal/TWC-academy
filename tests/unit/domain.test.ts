@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { contactSchema } from "@/lib/actions/contact";
 import { normalizeWebhookEvent, signWebhookPayload, verifyWebhookSignature } from "@/lib/adapters/payments";
 import { createServerPricedOrder } from "@/lib/domain/checkout";
+import { contactSchema } from "@/lib/domain/contact";
 import { passwordSchema } from "@/lib/domain/password";
 import { hasPermission } from "@/lib/domain/permissions";
 import {
