@@ -70,7 +70,7 @@ export function SiteFooter() {
       </div>
       <div className="border-t border-[var(--border)] py-4">
         <div className="container-shell flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-xs text-[var(--muted)]">© 2026 Trade Wave Capital. Demo content requires client approval before production use.</p>
+          <p className="text-xs text-[var(--muted)]">© 2026 Trade Wave Capital. All rights reserved.</p>
           <SocialIconLinks className="sm:justify-end" />
         </div>
       </div>

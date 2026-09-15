@@ -11,7 +11,7 @@ export default async function AdminOverviewPage() {
     ["Users", data.users],
     ["Active memberships", data.activeMemberships],
     ["Expiring soon", data.expiringMemberships],
-    ["Verified revenue", formatMoney(data.revenueMinor)],
+    ["Verified revenue", formatMoney(data.revenueMinor, "AED")],
     ["Failed payments", data.failedOrders],
     ["Pending Telegram", data.pendingTelegram],
     ["Open tickets", data.openTickets]

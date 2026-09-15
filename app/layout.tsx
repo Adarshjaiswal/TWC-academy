@@ -12,6 +12,10 @@ export const metadata: Metadata = {
   },
   description:
     "Trade Wave Capital teaches Gold, Forex, Crypto, and Indices through TWC Academy curriculum, live mentorship, risk management, and disciplined market application.",
+  icons: {
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+    shortcut: ["/favicon.svg"]
+  },
   openGraph: {
     title: "Trade Wave Capital | TWC Academy",
     description: "Unleash your potential with structured learning, live sessions, mentorship, and risk-first trading education.",
