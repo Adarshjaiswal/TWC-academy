@@ -7,7 +7,7 @@ import { useRef } from "react";
 const chartBars = [36, 58, 44, 72, 52, 84, 62, 92, 70, 100] as const;
 const instruments = ["XAUUSD", "US100", "BTC", "EURUSD"] as const;
 
-function PhoneMockup({ compact = false }: { compact?: boolean }) {
+function PhoneMockup({ balance, compact = false }: { balance: string; compact?: boolean }) {
   return (
     <div
       className={
@@ -27,7 +27,9 @@ function PhoneMockup({ compact = false }: { compact?: boolean }) {
       </div>
       <div className="mt-4 border border-[rgba(255,209,102,0.16)] bg-[rgba(255,209,102,0.06)] p-3">
         <p className="text-[10px] font-bold uppercase text-[var(--muted)]">Balance</p>
-        <p className="mt-1 text-lg font-black leading-tight text-white sm:text-xl lg:text-2xl">AED 54,246</p>
+        <p className={compact ? "mt-1 text-base font-black leading-tight text-white sm:text-lg" : "mt-1 text-lg font-black leading-tight text-white sm:text-xl lg:text-2xl"}>
+          {balance}
+        </p>
       </div>
       <div className="mt-4 flex h-24 items-end gap-1.5 border-b border-l border-[rgba(255,209,102,0.2)] px-2 sm:mt-5 sm:h-32 sm:gap-2">
         {chartBars.slice(0, compact ? 7 : chartBars.length).map((height, index) => (
@@ -101,14 +103,14 @@ export function HeroVisual() {
             className="flex justify-end pb-8 sm:pb-12"
             transition={{ duration: 6.2, repeat: Infinity, ease: "easeInOut" }}
           >
-            <PhoneMockup compact />
+            <PhoneMockup balance="AED 31,875" compact />
           </motion.div>
           <motion.div
             animate={{ y: [0, 12, 0], rotateY: [10, 3, 10] }}
             className="flex justify-start"
             transition={{ duration: 7.2, repeat: Infinity, ease: "easeInOut" }}
           >
-            <PhoneMockup />
+            <PhoneMockup balance="AED 54,246" />
           </motion.div>
         </motion.div>
 
